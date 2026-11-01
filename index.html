@@ -102,23 +102,27 @@
     <!-- Video -->
     <section class="video">
       <h2 class="video__title">Video mai tại vườn</h2>
-      <div class="video__row">
-        <figure>
-          <lite-youtube videoid="eB2f4yGGHG4" params="rel=0" style="background-image: url('assets/video/yt-nhi-ngoc-toan.jpg')">
-            <a class="lyt-playbtn" href="https://www.youtube.com/shorts/eB2f4yGGHG4" title="Phát video mai Nhị Ngọc Toàn" target="_blank" rel="noopener">
-              <span class="lyt-visually-hidden">Phát video mai Nhị Ngọc Toàn</span>
-            </a>
-          </lite-youtube>
-          <figcaption>Nhị Ngọc Toàn</figcaption>
-        </figure>
-        <figure>
-          <lite-youtube videoid="vo_5Qfsvy5U" params="rel=0" style="background-image: url('assets/video/yt-cuc-tho-huong.jpg')">
-            <a class="lyt-playbtn" href="https://www.youtube.com/shorts/vo_5Qfsvy5U" title="Phát video mai Cúc Thọ Hương" target="_blank" rel="noopener">
-              <span class="lyt-visually-hidden">Phát video mai Cúc Thọ Hương</span>
-            </a>
-          </lite-youtube>
-          <figcaption>Cúc Thọ Hương</figcaption>
-        </figure>
+      <div class="video__slider" data-video-slider>
+        <div class="video__row">
+          <figure>
+            <lite-youtube videoid="POXFy7Rf-OE" params="rel=0" style="background-image: url('assets/video/yt-nhi-ngoc-toan.jpg')">
+              <a class="lyt-playbtn" href="https://www.youtube.com/shorts/POXFy7Rf-OE" title="Phát video mai Nhị Ngọc Toàn" target="_blank" rel="noopener">
+                <span class="lyt-visually-hidden">Phát video mai Nhị Ngọc Toàn</span>
+              </a>
+            </lite-youtube>
+            <figcaption>Nhị Ngọc Toàn</figcaption>
+          </figure>
+          <figure>
+            <lite-youtube videoid="vo_5Qfsvy5U" params="rel=0" style="background-image: url('assets/video/yt-cuc-tho-huong.jpg')">
+              <a class="lyt-playbtn" href="https://www.youtube.com/shorts/vo_5Qfsvy5U" title="Phát video mai Cúc Thọ Hương" target="_blank" rel="noopener">
+                <span class="lyt-visually-hidden">Phát video mai Cúc Thọ Hương</span>
+              </a>
+            </lite-youtube>
+            <figcaption>Cúc Thọ Hương</figcaption>
+          </figure>
+        </div>
+        <button class="slider__arrow video__arrow video__arrow--prev" type="button" data-video-slide="-1" aria-label="Video trước" hidden>‹</button>
+        <button class="slider__arrow video__arrow video__arrow--next" type="button" data-video-slide="1" aria-label="Video sau">›</button>
       </div>
     </section>
 

@@ -253,6 +253,7 @@ a { color: inherit; }
   height: 22px;
   background: url("../assets/decor/hoa-mai.svg") center / contain no-repeat;
 }
+.video__slider { position: relative; }
 .video__row {
   display: flex;
   gap: 10px;
@@ -260,9 +261,16 @@ a { color: inherit; }
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-padding-left: 14px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--gold-400) transparent;
+  scrollbar-width: none;
+  cursor: grab;
 }
+.video__row::-webkit-scrollbar { display: none; }
+/* Tắt snap khi đang kéo để hàng video bám theo chuột */
+.video__row.is-dragging { scroll-snap-type: none; cursor: grabbing; user-select: none; }
+.video__row .lyt-playbtn { cursor: inherit; }
+.video__arrow { top: calc(50% - 16px); }
+.video__arrow--prev { left: 18px; }
+.video__arrow--next { right: 18px; }
 .video__row figure { flex: 0 0 88%; scroll-snap-align: start; }
 .video__row figcaption { margin-top: 6px; font-weight: 600; text-align: center; }
 .video__row lite-youtube { border-radius: 12px; }

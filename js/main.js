@@ -61,6 +61,86 @@ if (slider) {
   }, { passive: true });
 }
 
+// Slider video: chuột thì kéo, điện thoại thì vuốt nhờ cuộn ngang của trình duyệt
+const videoSlider = document.querySelector('[data-video-slider]');
+if (videoSlider) {
+  const DRAG_THRESHOLD = 6;
+  const SWITCH_DISTANCE = 40;
+  const row = videoSlider.querySelector('.video__row');
+  const cards = [...row.children];
+  const arrows = [...videoSlider.querySelectorAll('[data-video-slide]')];
+  const offsetOf = (card) => card.offsetLeft - cards[0].offsetLeft;
+  const current = () => {
+    const distances = cards.map((card) => Math.abs(offsetOf(card) - row.scrollLeft));
+    return distances.indexOf(Math.min(...distances));
+  };
+  const goTo = (index) => {
+    const target = cards[Math.min(cards.length - 1, Math.max(0, index))];
+    row.scrollTo({ left: offsetOf(target), behavior: 'smooth' });
+  };
+
+  row.addEventListener('scroll', () => {
+    const max = row.scrollWidth - row.clientWidth;
+    arrows[0].hidden = row.scrollLeft <= 1;
+    arrows[1].hidden = row.scrollLeft >= max - 1;
+  }, { passive: true });
+
+  arrows.forEach((arrow) => {
+    arrow.addEventListener('click', () => goTo(current() + Number(arrow.dataset.videoSlide)));
+  });
+
+  let pressed = false;
+  let dragged = false;
+  let startX = 0;
+  let startLeft = 0;
+  let startIndex = 0;
+  let distance = 0;
+
+  row.addEventListener('pointerdown', (event) => {
+    if (event.pointerType !== 'mouse' || event.button !== 0) return;
+    pressed = true;
+    dragged = false;
+    startX = event.clientX;
+    startLeft = row.scrollLeft;
+    startIndex = current();
+  });
+
+  row.addEventListener('pointermove', (event) => {
+    if (!pressed) return;
+    distance = event.clientX - startX;
+    if (!dragged) {
+      if (Math.abs(distance) < DRAG_THRESHOLD) return;
+      dragged = true;
+      row.classList.add('is-dragging');
+      // Chỉ giữ con trỏ sau khi đã kéo, nếu không cú bấm phát video sẽ không tới nút play
+      row.setPointerCapture(event.pointerId);
+    }
+    row.scrollLeft = startLeft - distance;
+  });
+
+  const release = () => {
+    if (!pressed) return;
+    pressed = false;
+    if (!dragged) return;
+    let index = startIndex;
+    if (distance <= -SWITCH_DISTANCE) index += 1;
+    if (distance >= SWITCH_DISTANCE) index -= 1;
+    goTo(index);
+    setTimeout(() => row.classList.remove('is-dragging'), 400);
+  };
+  row.addEventListener('pointerup', release);
+  row.addEventListener('pointercancel', release);
+
+  // Kéo xong không được tính là bấm phát video
+  row.addEventListener('click', (event) => {
+    if (!dragged) return;
+    event.preventDefault();
+    event.stopPropagation();
+    dragged = false;
+  }, true);
+  row.addEventListener('dragstart', (event) => event.preventDefault());
+}
+
 // Trang có 2 form đặt hàng giống nhau như trang mẫu
 const orderSection = document.getElementById('dang-ky');
 const orderCopy = orderSection.cloneNode(true);
