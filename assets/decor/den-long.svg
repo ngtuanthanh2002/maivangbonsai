@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 230" fill="none">
+<defs><radialGradient id="r" cx=".42" cy=".38" r=".75"><stop offset="0" stop-color="#F0432A"/><stop offset=".65" stop-color="#C81E16"/><stop offset="1" stop-color="#8E100C"/></radialGradient></defs>
+<path d="M60 0V34" stroke="#A8770C" stroke-width="2.5"/>
+<rect x="38" y="32" width="44" height="12" rx="4" fill="#F4BE26" stroke="#A8770C"/>
+<ellipse cx="60" cy="96" rx="54" ry="54" fill="url(#r)"/>
+<g stroke="#FFD65A" stroke-opacity=".5" stroke-width="1.6"><path d="M60 42V150"/><path d="M60 42C30 62 30 130 60 150"/><path d="M60 42C90 62 90 130 60 150"/><path d="M60 42C2 62 2 130 60 150"/><path d="M60 42C118 62 118 130 60 150"/></g>
+<rect x="38" y="148" width="44" height="12" rx="4" fill="#F4BE26" stroke="#A8770C"/>
+<path d="M60 160V176" stroke="#A8770C" stroke-width="2.5"/>
+<circle cx="60" cy="178" r="5" fill="#F4BE26" stroke="#A8770C"/>
+<path d="M50 183H70L74 228H46Z" fill="#E22C1E"/>
+<g stroke="#F9D65C" stroke-width="1.4"><path d="M54 186L51 226"/><path d="M60 186V226"/><path d="M66 186L69 226"/></g>
+</svg>
