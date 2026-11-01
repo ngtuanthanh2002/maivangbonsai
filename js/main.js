@@ -1,3 +1,8 @@
+// Dán URL Web app của Google Apps Script vào đây (kết thúc bằng /exec).
+// Để trống thì khách gửi đơn thủ công qua Zalo hoặc gọi điện.
+const ORDER_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzG28YlyiQKMXWfB2VeMumUebn2d62i2RX4o1vAz9kkqdBrH10KI6Hmi6dJiXZ1hqw/exec';
+const ORDER_TIMEOUT_MS = 20000;
+
 const money = (value) => value.toLocaleString('vi-VN') + '₫';
 
 // Đếm ngược đến Tết
@@ -149,6 +154,23 @@ document.getElementById('order-copy').replaceWith(orderCopy);
 
 const dialog = document.getElementById('confirm');
 const orderText = document.getElementById('confirm-text');
+const successDialog = document.getElementById('order-success');
+
+const sendOrder = async (payload) => {
+  if (!ORDER_ENDPOINT) return false;
+  try {
+    // Không đặt Content-Type JSON: Apps Script không trả lời được yêu cầu preflight CORS
+    const response = await fetch(ORDER_ENDPOINT, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(ORDER_TIMEOUT_MS),
+    });
+    const result = await response.json();
+    return result.ok === true;
+  } catch {
+    return false;
+  }
+};
 
 document.querySelectorAll('[data-order]').forEach((form) => {
   const readOrder = () => {
@@ -172,8 +194,12 @@ document.querySelectorAll('[data-order]').forEach((form) => {
 
   form.addEventListener('change', render);
 
-  form.addEventListener('submit', (event) => {
+  const submitButton = form.querySelector('button[type="submit"]');
+  const submitLabel = submitButton.textContent;
+
+  form.addEventListener('submit', async (event) => {
     event.preventDefault();
+    if (submitButton.disabled) return;
     const order = readOrder();
     const data = new FormData(form);
     const lines = [
@@ -191,6 +217,29 @@ document.querySelectorAll('[data-order]').forEach((form) => {
       `Địa chỉ: ${data.get('address').trim()}`,
     );
 
+    submitButton.disabled = true;
+    submitButton.textContent = 'Đang gửi đơn…';
+    const saved = await sendOrder({
+      name: data.get('name'),
+      phone: data.get('phone'),
+      address: data.get('address'),
+      pack: order.packLabel,
+      bud: order.budLabel || 'Không mua',
+      variety: data.get('variety') || 'Nhờ nhà vườn chọn giúp',
+      total: order.total,
+      website: data.get('website'),
+    });
+    submitButton.disabled = false;
+    submitButton.textContent = submitLabel;
+
+    if (saved) {
+      form.reset();
+      render();
+      successDialog.showModal();
+      return;
+    }
+
+    // Không lưu được đơn thì để khách gửi qua Zalo, tránh mất đơn
     orderText.value = lines.join('\n');
     dialog.showModal();
   });

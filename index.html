@@ -152,7 +152,8 @@
             <legend><i>1</i> Thông tin nhận hàng</legend>
             <input class="input" type="text" name="name" placeholder="Họ và tên" aria-label="Họ và tên" autocomplete="name" required>
             <input class="input" type="tel" name="phone" placeholder="Số điện thoại" aria-label="Số điện thoại" autocomplete="tel" inputmode="tel" pattern="[0-9 .+]{9,15}" title="Nhập số điện thoại hợp lệ" required>
-            <input class="input" type="text" name="address" placeholder="Địa chỉ nhận hàng" aria-label="Địa chỉ nhận hàng" autocomplete="street-address" required>
+            <input class="input" type="text" name="address" placeholder="Địa chỉ nhận hàng (Địa chỉ cũ)" aria-label="Địa chỉ nhận hàng (Địa chỉ cũ)" autocomplete="street-address" required>
+            <input class="order__trap" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
             <select class="input" name="variety" aria-label="Giống mai muốn chọn">
               <option value="">Giống mai: nhờ nhà vườn chọn giúp</option>
               <option>Giảo Siêu Nụ</option>
@@ -313,6 +314,12 @@
     <a class="btn" id="confirm-zalo" autofocus href="https://zalo.me/0368555616" target="_blank" rel="noopener">Sao chép đơn &amp; mở Zalo</a>
     <a class="btn btn--ghost" href="tel:0368555616">Gọi 0368 555 616</a>
     <form method="dialog"><button class="confirm__close" aria-label="Đóng">×</button></form>
+  </dialog>
+
+  <dialog class="confirm" id="order-success">
+    <h2>Đặt hàng thành công</h2>
+    <p>Cảm ơn bạn. Nhà vườn sẽ gọi xác nhận trước khi giao hàng.</p>
+    <form method="dialog"><button class="btn confirm__done" autofocus>Đóng</button></form>
   </dialog>
 
   <script src="assets/vendor/lite-youtube-embed/lite-yt-embed.js"></script>

@@ -389,6 +389,8 @@ a { color: inherit; }
 }
 .input:focus { outline: 0; border-color: var(--red-500); background: #fff; }
 .input::placeholder { color: #8d7555; }
+/* Ô bẫy bot, người dùng không nhìn thấy */
+.order__trap { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
 
 .opt { position: relative; display: block; margin-bottom: 8px; cursor: pointer; }
 .opt input { position: absolute; opacity: 0; }
@@ -536,6 +538,7 @@ a { color: inherit; }
 }
 .confirm .btn { animation: none; }
 .confirm .btn + .btn { margin-top: 8px; }
+.confirm__done { margin-top: 14px; }
 .confirm__close {
   position: absolute;
   top: 6px;
