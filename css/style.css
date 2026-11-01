@@ -25,7 +25,7 @@ body {
   background: #fff;
 }
 
-img, video { display: block; max-width: 100%; height: auto; }
+img { display: block; max-width: 100%; height: auto; }
 h1, h2, h3, p, ul, dl, dd, figure, fieldset { margin: 0; padding: 0; }
 ul { list-style: none; }
 fieldset { border: 0; min-width: 0; }
@@ -237,7 +237,6 @@ a { color: inherit; }
 .info .btn { margin-top: 8px; }
 
 .video { background: var(--paper); }
-.video video { width: 100%; background: #000; }
 .video__title {
   display: flex;
   align-items: center;
@@ -264,7 +263,7 @@ a { color: inherit; }
   scrollbar-width: thin;
   scrollbar-color: var(--gold-400) transparent;
 }
-.video__row figure { flex: 0 0 74%; scroll-snap-align: start; }
+.video__row figure { flex: 0 0 88%; scroll-snap-align: start; }
 .video__row figcaption { margin-top: 6px; font-weight: 600; text-align: center; }
 .video__row lite-youtube { border-radius: 12px; }
 /* Video khổ 1080x1346, thư viện mặc định 16:9 */
