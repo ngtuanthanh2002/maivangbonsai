@@ -5,6 +5,36 @@ const ORDER_TIMEOUT_MS = 20000;
 
 const money = (value) => value.toLocaleString('vi-VN') + '₫';
 
+// Meta Pixel: PageView nằm trong <head>, các bước còn lại của phễu mua hàng ở đây
+const track = (event, data) => {
+  if (window.fbq) window.fbq('track', event, data);
+};
+const trackedOnce = new Set();
+const trackOnce = (event, data) => {
+  if (trackedOnce.has(event)) return;
+  trackedOnce.add(event);
+  track(event, data);
+};
+const adData = (order) => ({
+  content_name: order.packLabel,
+  content_ids: [order.packSku],
+  content_type: 'product',
+  num_items: order.packItems,
+  value: order.total,
+  currency: 'VND',
+});
+
+track('ViewContent', {
+  content_name: 'Cây mai vàng bonsai',
+  content_type: 'product',
+  value: 100000,
+  currency: 'VND',
+});
+
+document.addEventListener('click', (event) => {
+  if (event.target.closest('a[href^="tel:"], a[href*="zalo.me"]')) trackOnce('Contact');
+});
+
 // Đếm ngược đến Tết
 const timers = document.querySelectorAll('[data-countdown]');
 if (timers.length) {
@@ -180,6 +210,8 @@ document.querySelectorAll('[data-order]').forEach((form) => {
     const budPrice = Number(bud.dataset.price);
     return {
       packLabel: pack.dataset.label,
+      packSku: pack.dataset.sku,
+      packItems: Number(pack.dataset.items),
       packPrice,
       budLabel: bud.dataset.label,
       budPrice,
@@ -192,7 +224,14 @@ document.querySelectorAll('[data-order]').forEach((form) => {
     total.textContent = money(readOrder().total);
   };
 
-  form.addEventListener('change', render);
+  form.addEventListener('change', (event) => {
+    render();
+    if (event.target.type === 'radio') trackOnce('AddToCart', adData(readOrder()));
+  });
+
+  form.addEventListener('focusin', (event) => {
+    if (event.target.matches('.input')) trackOnce('InitiateCheckout', adData(readOrder()));
+  });
 
   const submitButton = form.querySelector('button[type="submit"]');
   const submitLabel = submitButton.textContent;
@@ -233,6 +272,7 @@ document.querySelectorAll('[data-order]').forEach((form) => {
     submitButton.textContent = submitLabel;
 
     if (saved) {
+      track('Purchase', adData(order));
       form.reset();
       render();
       successDialog.showModal();

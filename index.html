@@ -15,8 +15,24 @@
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/vendor/lite-youtube-embed/lite-yt-embed.css">
   <link rel="stylesheet" href="css/style.css">
+
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1827861018548804');
+  fbq('track', 'PageView');
+  </script>
+  <!-- End Meta Pixel Code -->
 </head>
 <body>
+  <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1827861018548804&ev=PageView&noscript=1" alt=""></noscript>
 
   <main class="page">
 
@@ -174,19 +190,19 @@
           <fieldset>
             <legend><i>2</i> Chọn gói cây</legend>
             <label class="opt">
-              <input type="radio" name="pack" data-price="200000" data-label="Mua 2 cây">
+              <input type="radio" name="pack" data-sku="goi-2-cay" data-items="2" data-price="200000" data-label="Mua 2 cây">
               <span class="opt__box"><span><b>2 cây</b><small>100K/1 cây · Miễn phí ship</small></span><em>200.000₫</em></span>
             </label>
             <label class="opt">
-              <input type="radio" name="pack" data-price="300000" data-label="Mua 3 cây">
+              <input type="radio" name="pack" data-sku="goi-3-cay" data-items="3" data-price="300000" data-label="Mua 3 cây">
               <span class="opt__box"><span><b>3 cây</b><small>100K/1 cây · Miễn phí ship</small></span><em>300.000₫</em></span>
             </label>
             <label class="opt">
-              <input type="radio" name="pack" data-price="500000" data-label="Mua 5 cây tặng thêm 1 cây" checked>
+              <input type="radio" name="pack" data-sku="goi-5-tang-1" data-items="6" data-price="500000" data-label="Mua 5 cây tặng thêm 1 cây" checked>
               <span class="opt__box"><span><b>5 cây + tặng 1 cây</b><small>Miễn phí ship</small></span><em>500.000₫</em></span>
             </label>
             <label class="opt">
-              <input type="radio" name="pack" data-price="1000000" data-label="Mua 10 cây tặng thêm 2 cây">
+              <input type="radio" name="pack" data-sku="goi-10-tang-2" data-items="12" data-price="1000000" data-label="Mua 10 cây tặng thêm 2 cây">
               <span class="opt__box"><span><b>10 cây + tặng 2 cây</b><small>Miễn phí ship</small></span><em>1.000.000₫</em></span>
             </label>
           </fieldset>
