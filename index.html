@@ -169,25 +169,10 @@
             <input class="input" type="tel" name="phone" placeholder="Số điện thoại" aria-label="Số điện thoại" autocomplete="tel" inputmode="tel" pattern="[0-9 .+]{9,15}" title="Nhập số điện thoại hợp lệ" required>
             <input class="input" type="text" name="address" placeholder="Địa chỉ nhận hàng (Địa chỉ cũ)" aria-label="Địa chỉ nhận hàng (Địa chỉ cũ)" autocomplete="street-address" required>
             <input class="order__trap" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-            <select class="input" name="variety" aria-label="Giống mai muốn chọn">
-              <option value="">Giống mai: nhờ nhà vườn chọn giúp</option>
-              <option>Giảo Siêu Nụ</option>
-              <option>Siêu Bông Sài Gòn</option>
-              <option>Siêu Bông Bình Lợi</option>
-              <option>Nhị Ngọc Toàn</option>
-              <option>Giảo Thủ Đức</option>
-              <option>Giảo Cánh Xoáy</option>
-              <option>Giảo Phú Tân</option>
-              <option>Cúc Thọ Hương</option>
-              <option>Cúc Hai Tầng</option>
-              <option>Giảo Như Ý</option>
-              <option>Hoàng Huyết Long</option>
-              <option>Đại Lộc</option>
-            </select>
           </fieldset>
 
           <fieldset>
-            <legend><i>2</i> Chọn gói cây</legend>
+            <legend><i>2</i> Chọn gói cây và giống mai</legend>
             <label class="opt">
               <input type="radio" name="pack" data-sku="goi-2-cay" data-items="2" data-price="200000" data-label="Mua 2 cây">
               <span class="opt__box"><span><b>2 cây</b><small>100K/1 cây · Miễn phí ship</small></span><em>200.000₫</em></span>
@@ -204,6 +189,26 @@
               <input type="radio" name="pack" data-sku="goi-10-tang-2" data-items="12" data-price="1000000" data-label="Mua 10 cây tặng thêm 2 cây">
               <span class="opt__box"><span><b>10 cây + tặng 2 cây</b><small>Miễn phí ship</small></span><em>1.000.000₫</em></span>
             </label>
+
+            <div class="variety">
+              <p class="variety__head"><b>Chọn giống mai</b><small>Bấm chọn một hoặc nhiều giống, sau đó chọn số cây</small></p>
+              <div class="variety__list">
+                <label class="chip"><input type="checkbox" name="variety" value="Giảo Siêu Nụ"><span>Giảo Siêu Nụ</span></label>
+                <label class="chip"><input type="checkbox" name="variety" value="Siêu Bông Sài Gòn"><span>Siêu Bông Sài Gòn</span></label>
+                <label class="chip"><input type="checkbox" name="variety" value="Siêu Bông Bình Lợi"><span>Siêu Bông Bình Lợi</span></label>
+                <label class="chip"><input type="checkbox" name="variety" value="Nhị Ngọc Toàn"><span>Nhị Ngọc Toàn</span></label>
+                <label class="chip"><input type="checkbox" name="variety" value="Giảo Thủ Đức"><span>Giảo Thủ Đức</span></label>
+                <label class="chip"><input type="checkbox" name="variety" value="Giảo Cánh Xoáy"><span>Giảo Cánh Xoáy</span></label>
+                <label class="chip"><input type="checkbox" name="variety" value="Giảo Phú Tân"><span>Giảo Phú Tân</span></label>
+                <label class="chip"><input type="checkbox" name="variety" value="Cúc Thọ Hương"><span>Cúc Thọ Hương</span></label>
+                <label class="chip"><input type="checkbox" name="variety" value="Cúc Hai Tầng"><span>Cúc Hai Tầng</span></label>
+                <label class="chip"><input type="checkbox" name="variety" value="Giảo Như Ý"><span>Giảo Như Ý</span></label>
+                <label class="chip"><input type="checkbox" name="variety" value="Hoàng Huyết Long"><span>Hoàng Huyết Long</span></label>
+                <label class="chip"><input type="checkbox" name="variety" value="Đại Lộc"><span>Đại Lộc</span></label>
+              </div>
+              <ul class="variety__picked" data-variety-picked hidden></ul>
+              <p class="variety__hint" data-variety-hint aria-live="polite"></p>
+            </div>
           </fieldset>
 
           <fieldset>

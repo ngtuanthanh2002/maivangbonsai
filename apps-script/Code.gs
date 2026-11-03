@@ -5,11 +5,15 @@
  * Nhiều khách đặt cùng lúc sẽ được xếp hàng lần lượt nhờ LockService.
  */
 
+// Tăng số này mỗi lần sửa script, mở URL Web app để biết bản nào đang chạy
+const SCRIPT_VERSION = 2;
 const SPREADSHEET_ID = '1VaqoLdohKsXJMu4IP8tckmjVMhxf2z_l0_r-GyU-6vA';
 const SHEET_GID = 0;
 const TIME_ZONE = 'Asia/Ho_Chi_Minh';
 const LOCK_TIMEOUT_MS = 30000;
 const MAX_TEXT_LENGTH = 500;
+const MAX_VARIETIES = 20;
+const MAX_TREES = 100;
 
 const HEADERS = [
   'Thời gian',
@@ -22,6 +26,7 @@ const HEADERS = [
   'Tổng tiền',
 ];
 const TOTAL_COLUMN = HEADERS.indexOf('Tổng tiền') + 1;
+const VARIETY_COLUMN = HEADERS.indexOf('Giống mai') + 1;
 
 function doPost(e) {
   const lock = LockService.getScriptLock();
@@ -44,7 +49,10 @@ function doPost(e) {
     }
 
     sheet.appendRow(toRow_(order));
-    sheet.getRange(sheet.getLastRow(), TOTAL_COLUMN).setNumberFormat('#,##0"₫"');
+    const row = sheet.getLastRow();
+    sheet.getRange(row, TOTAL_COLUMN).setNumberFormat('#,##0"₫"');
+    // Mỗi giống một dòng trong ô nên cần bật xuống dòng
+    sheet.getRange(row, VARIETY_COLUMN).setWrap(true);
     SpreadsheetApp.flush();
 
     return jsonResponse_({ ok: true });
@@ -58,7 +66,7 @@ function doPost(e) {
 
 // Mở URL Web app trên trình duyệt để kiểm tra đã triển khai thành công chưa
 function doGet() {
-  return jsonResponse_({ ok: true, message: 'Mai Vàng Bonsai đang nhận đơn' });
+  return jsonResponse_({ ok: true, message: 'Mai Vàng Bonsai đang nhận đơn', version: SCRIPT_VERSION });
 }
 
 function getSheet_() {
@@ -77,9 +85,32 @@ function toRow_(order) {
     safeText_(order.address),
     safeText_(order.pack),
     safeText_(order.bud),
-    safeText_(order.variety),
+    varietyText_(order.varieties, order.packItems),
     Number(order.total) || 0,
   ];
+}
+
+// Ví dụ: "Giảo Siêu Nụ: 2 cây" / "Đại Lộc: 1 cây" / "Nhà vườn chọn giúp: 3 cây"
+function varietyText_(varieties, packItems) {
+  const list = Array.isArray(varieties) ? varieties.slice(0, MAX_VARIETIES) : [];
+  const lines = [];
+  let picked = 0;
+  list.forEach((item) => {
+    const name = text_(item && item.name);
+    const qty = treeCount_(item && item.qty);
+    if (!name || qty === 0) return;
+    picked += qty;
+    lines.push(safeText_(name) + ': ' + qty + ' cây');
+  });
+
+  const unpicked = treeCount_(packItems) - picked;
+  if (unpicked > 0) lines.push('Nhà vườn chọn giúp: ' + unpicked + ' cây');
+  return lines.join('\n') || 'Nhà vườn chọn giúp';
+}
+
+function treeCount_(value) {
+  const count = Math.floor(Number(value));
+  return count > 0 ? Math.min(count, MAX_TREES) : 0;
 }
 
 function text_(value) {

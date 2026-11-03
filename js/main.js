@@ -1,6 +1,6 @@
 // Dán URL Web app của Google Apps Script vào đây (kết thúc bằng /exec).
 // Để trống thì khách gửi đơn thủ công qua Zalo hoặc gọi điện.
-const ORDER_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzG28YlyiQKMXWfB2VeMumUebn2d62i2RX4o1vAz9kkqdBrH10KI6Hmi6dJiXZ1hqw/exec';
+const ORDER_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxFEdbwe70do2A58l5_1rWtxDDyXsPTDl8A1NVp-GrzngV_5ukjy9wP6-o-CwicnlFE/exec';
 const ORDER_TIMEOUT_MS = 20000;
 
 const money = (value) => value.toLocaleString('vi-VN') + '₫';
@@ -220,9 +220,87 @@ document.querySelectorAll('[data-order]').forEach((form) => {
   };
 
   const total = form.querySelector('[data-total]');
-  const render = () => {
-    total.textContent = money(readOrder().total);
+  const chips = [...form.querySelectorAll('input[name="variety"]')];
+  const picked = form.querySelector('[data-variety-picked]');
+  const varietyHint = form.querySelector('[data-variety-hint]');
+
+  // Mỗi giống được tích có một dòng chọn số cây, xếp theo thứ tự khách chọn
+  const rows = () => [...picked.children];
+  const rowOf = (name) => rows().find((row) => row.dataset.variety === name);
+  const qtyOf = (row) => Number(row.dataset.qty);
+  const setQty = (row, qty) => {
+    row.dataset.qty = qty;
+    row.querySelector('b').textContent = qty;
   };
+  const createRow = (name) => {
+    const row = document.createElement('li');
+    row.className = 'picked';
+    row.dataset.variety = name;
+    row.innerHTML = '<span class="picked__name"></span><span class="qty">'
+      + '<button type="button" data-step="-1">−</button><b></b>'
+      + '<button type="button" data-step="1">+</button></span>';
+    row.querySelector('.picked__name').textContent = name;
+    row.querySelector('[data-step="-1"]').setAttribute('aria-label', `Bớt 1 cây ${name}`);
+    row.querySelector('[data-step="1"]').setAttribute('aria-label', `Thêm 1 cây ${name}`);
+    setQty(row, 1);
+    return row;
+  };
+  const removeRow = (row) => {
+    chips.find((chip) => chip.value === row.dataset.variety).checked = false;
+    row.remove();
+  };
+  const pickedCount = () => rows().reduce((sum, row) => sum + qtyOf(row), 0);
+  const readVarieties = () => rows().map((row) => ({ name: row.dataset.variety, qty: qtyOf(row) }));
+
+  // Tổng số cây các giống không vượt số cây của gói, gói nhỏ lại thì bớt từ giống chọn sau cùng
+  const renderVarieties = (max) => {
+    chips.forEach((chip) => {
+      const row = rowOf(chip.value);
+      if (chip.checked && !row) picked.append(createRow(chip.value));
+      if (!chip.checked && row) row.remove();
+    });
+    let extra = pickedCount() - max;
+    for (const row of rows().reverse()) {
+      if (extra <= 0) break;
+      const cut = Math.min(extra, qtyOf(row));
+      if (cut === qtyOf(row)) removeRow(row);
+      else setQty(row, qtyOf(row) - cut);
+      extra -= cut;
+    }
+
+    const count = pickedCount();
+    chips.forEach((chip) => {
+      chip.disabled = !chip.checked && count >= max;
+    });
+    rows().forEach((row) => {
+      row.querySelector('[data-step="1"]').disabled = count >= max;
+    });
+    picked.hidden = count === 0;
+    if (count === 0) {
+      varietyHint.textContent = `Gói của bạn có ${max} cây · Không chọn: nhà vườn chọn giúp`;
+    } else if (count < max) {
+      varietyHint.textContent = `Đã chọn ${count}/${max} cây · ${max - count} cây còn lại nhà vườn chọn giúp`;
+    } else {
+      varietyHint.textContent = `Đã chọn đủ ${max}/${max} cây`;
+    }
+  };
+
+  const render = () => {
+    const order = readOrder();
+    total.textContent = money(order.total);
+    renderVarieties(order.packItems);
+  };
+
+  form.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-step]');
+    if (!button) return;
+    const row = button.closest('.picked');
+    const qty = qtyOf(row) + Number(button.dataset.step);
+    // Bớt về 0 cây thì bỏ luôn giống đó
+    if (qty <= 0) removeRow(row);
+    else setQty(row, qty);
+    render();
+  });
 
   form.addEventListener('change', (event) => {
     render();
@@ -241,6 +319,10 @@ document.querySelectorAll('[data-order]').forEach((form) => {
     if (submitButton.disabled) return;
     const order = readOrder();
     const data = new FormData(form);
+    const varieties = readVarieties();
+    const unpicked = order.packItems - pickedCount();
+    const varietyParts = varieties.map((item) => `${item.name} x${item.qty}`);
+    if (unpicked > 0) varietyParts.push(`nhà vườn chọn giúp ${unpicked} cây`);
     const lines = [
       'ĐƠN HÀNG MAI VÀNG BONSAI',
       `Gói: ${order.packLabel} - ${money(order.packPrice)}`,
@@ -250,7 +332,7 @@ document.querySelectorAll('[data-order]').forEach((form) => {
     }
     lines.push(
       `Tổng: ${money(order.total)} (miễn ship)`,
-      `Giống mai: ${data.get('variety') || 'Nhờ nhà vườn chọn giúp'}`,
+      `Giống mai: ${varietyParts.join(', ')}`,
       `Người nhận: ${data.get('name').trim()}`,
       `Điện thoại: ${data.get('phone').trim()}`,
       `Địa chỉ: ${data.get('address').trim()}`,
@@ -263,8 +345,9 @@ document.querySelectorAll('[data-order]').forEach((form) => {
       phone: data.get('phone'),
       address: data.get('address'),
       pack: order.packLabel,
+      packItems: order.packItems,
       bud: order.budLabel || 'Không mua',
-      variety: data.get('variety') || 'Nhờ nhà vườn chọn giúp',
+      varieties,
       total: order.total,
       website: data.get('website'),
     });
