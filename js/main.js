@@ -3,6 +3,9 @@
 const ORDER_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxFEdbwe70do2A58l5_1rWtxDDyXsPTDl8A1NVp-GrzngV_5ukjy9wP6-o-CwicnlFE/exec';
 const ORDER_TIMEOUT_MS = 20000;
 
+const PIXEL_ID = '1571393168076227';
+const PIXEL_ACCESS_TOKEN = 'EAAmX5QExR6kBSyp3hzZAuN7ZBcipRuK1IqCbZBY1tInz7Mms64jD4Mx8XT3szOujk5DW0B5wR2QJMFfaTnkqo2D8Md6hNWH0nqD2nTMlCHtK1zqpZCte7icNNGHyzlhM78WrUDbZB1kLXm8Gkqz0jGpIdIpW3RyzY9nkaZB9ZBfhTG5ZAO75DkZCuVNl3LBReZAwZDZD';
+
 const money = (value) => value.toLocaleString('vi-VN') + '₫';
 
 // Meta Pixel: PageView nằm trong <head>, các bước còn lại của phễu mua hàng ở đây
